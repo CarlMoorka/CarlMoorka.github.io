@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Опрос — Мои документы</title>
+  <style>
+      :root {
+      --main-blue: #1976d2;
+      --light-blue: #e3f2fd;
+      --soft-gray: #f5f5f5;
+      --text-color: #333333;
+      --card-bg: #ffffff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--soft-gray);
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+
+    header {
+      background-color: var(--main-blue);
+      color: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+    }
+
+    nav {
+      margin-top: 0.5rem;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-right: 1rem;
+      transition: color 0.3s;
+    }
+
+    nav a:hover {
+      color: #cce6ff;
+    }
+
+    .services-section {
+      padding: 2rem;
+      background-color: #ffffff;
+    }
+
+    .services-section h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: var(--main-blue);
+      font-size: 1.8rem;
+    }
+
+    .services {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      padding: 2rem;
+    }
+
+    .service-card {
+      background-color: var(--card-bg);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+      transition: transform 0.2s ease-in-out;
+    }
+
+    .service-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .service-card h4 {
+      margin-bottom: 0.5rem;
+      color: var(--main-blue);
+    }
+
+    .service-card p {
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 1.5rem;
+      }
+    }
+    #loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+
+    .spinner {
+      border: 6px solid #e0e0e0;
+      border-top: 6px solid var(--main-blue);
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 2rem auto;
+      background-color: var(--card-bg);
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    h2 {
+      color: var(--main-blue);
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .question {
+      margin-bottom: 1.5rem;
+    }
+
+    .question p {
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+
+    textarea, input[type="text"] {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      resize: vertical;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.4rem;
+    }
+
+    button {
+      padding: 0.8rem 1.5rem;
+      background-color: var(--main-blue);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    button:hover {
+      background-color: #1565c0;
+    }
+
+    .result {
+      margin-top: 2rem;
+      background-color: #f0f9ff;
+      border: 1px solid #bbdefb;
+      padding: 1rem;
+      border-radius: 8px;
+    }
+
+    footer {
+      margin-top: 2rem;
+      text-align: center;
+      background-color: var(--main-blue);
+      color: white;
+      padding: 1rem;
+    }
+  </style>
+</head>
+<body>
+    <div id="loader">
+        <div class="spinner"></div>
+      </div>
+  <header>
+    <h1>Центр госуслуг "Мои документы"</h1>
+    <nav>
+      <a href="index.html">Главная</a>
+      <a href="services.html">Услуги</a>
+      <a href="contacts.html">Контакты</a>
+      <a href="quiz.html">Опрос</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <h2>Опрос пользователей</h2>
+    <form id="surveyForm">
+      <div class="question">
+        <p>1. Как часто вы обращаетесь в МФЦ?</p>
+        <label><input type="radio" name="q1" value="Раз в месяц"> Раз в месяц</label>
+        <label><input type="radio" name="q1" value="Раз в год"> Раз в год</label>
+        <label><input type="radio" name="q1" value="Реже"> Реже</label>
+      </div>
+
+      <div class="question">
+        <p>2. Какую услугу вы получали последней?</p>
+        <input type="text" name="q2" required>
+      </div>
+
+      <div class="question">
+        <p>3. Насколько вы довольны качеством обслуживания?</p>
+        <label><input type="radio" name="q3" value="Очень доволен"> Очень доволен</label>
+        <label><input type="radio" name="q3" value="Удовлетворительно"> Удовлетворительно</label>
+        <label><input type="radio" name="q3" value="Плохо"> Плохо</label>
+      </div>
+
+      <div class="question">
+        <p>4. Выберите важные для вас качества сотрудника МФЦ (можно несколько):</p>
+        <label><input type="checkbox" name="q4" value="Вежливость"> Вежливость</label>
+        <label><input type="checkbox" name="q4" value="Компетентность"> Компетентность</label>
+        <label><input type="checkbox" name="q4" value="Быстрота"> Быстрота</label>
+        <label><input type="checkbox" name="q4" value="Терпение"> Терпение</label>
+      </div>
+
+      <div class="question">
+        <p>5. Вы получали услуги онлайн через сайт?</p>
+        <label><input type="radio" name="q5" value="Да"> Да</label>
+        <label><input type="radio" name="q5" value="Нет"> Нет</label>
+      </div>
+
+      <div class="question">
+        <p>6. Насколько удобно пользоваться сайтом МФЦ?</p>
+        <label><input type="radio" name="q6" value="Удобно"> Удобно</label>
+        <label><input type="radio" name="q6" value="Сложно"> Сложно</label>
+        <label><input type="radio" name="q6" value="Не пользовался"> Не пользовался</label>
+      </div>
+
+      <div class="question">
+        <p>7. Как вы узнали о нашем центре?</p>
+        <label><input type="checkbox" name="q7" value="Интернет"> Интернет</label>
+        <label><input type="checkbox" name="q7" value="Знакомые"> Знакомые</label>
+        <label><input type="checkbox" name="q7" value="Реклама"> Реклама</label>
+        <label><input type="checkbox" name="q7" value="Просто проходил мимо"> Просто проходил мимо</label>
+      </div>
+
+      <div class="question">
+        <p>8. Оцените внешний вид офиса</p>
+        <label><input type="radio" name="q8" value="Отличный"> Отличный</label>
+        <label><input type="radio" name="q8" value="Нормальный"> Нормальный</label>
+        <label><input type="radio" name="q8" value="Плохой"> Плохой</label>
+      </div>
+
+      <div class="question">
+        <p>9. Были ли трудности при получении услуг?</p>
+        <label><input type="radio" name="q9" value="Да"> Да</label>
+        <label><input type="radio" name="q9" value="Нет"> Нет</label>
+      </div>
+
+      <div class="question">
+        <p>10. Ваши предложения или замечания:</p>
+        <textarea name="q10" rows="3" placeholder="Ваше сообщение..."></textarea>
+      </div>
+
+      <div style="text-align: center;">
+        <button type="submit">Отправить</button>
+      </div>
+    </form>
+
+    <div class="result" id="result" style="display: none;"></div>
+  </div>
+
+  <footer>
+    <p>© 2025 Центр государственных услуг «Мои документы» Москвы. Все права защищены.</p>
+  </footer>
+
+  <script>
+    document.getElementById('surveyForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const result = document.getElementById('result');
+      result.style.display = 'block';
+      result.innerHTML = "<strong>Спасибо за участие в опросе!</strong> Ваши ответы отправлены.";
+      this.reset();
+    });
+  </script>
+  <script>
+    window.addEventListener('load', function () {
+      const loader = document.getElementById('loader');
+      setTimeout(() => {
+        loader.style.opacity = '0';
+        setTimeout(() => loader.style.display = 'none', 500);
+      }, 500);
+    });
+  </script>
+</body>
+</html>

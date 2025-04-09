@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Контакты — Мои документы</title>
+  <style>
+    :root {
+      --main-blue: #1976d2;
+      --light-blue: #e3f2fd;
+      --soft-gray: #f5f5f5;
+      --text-color: #333333;
+      --card-bg: #ffffff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--soft-gray);
+      color: var(--text-color);
+    }
+
+    header {
+      background-color: var(--main-blue);
+      color: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+    }
+
+    nav {
+      margin-top: 0.5rem;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-right: 1rem;
+      transition: color 0.3s;
+    }
+
+    nav a:hover {
+      color: #cce6ff;
+    }
+
+    .contact-section {
+      padding: 2rem;
+      background-color: var(--card-bg);
+      max-width: 800px;
+      margin: 2rem auto;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .contact-section h2 {
+      color: var(--main-blue);
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .contact-info p {
+      margin-bottom: 1rem;
+      line-height: 1.6;
+    }
+
+    footer {
+      background-color: var(--main-blue);
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      margin-top: 2rem;
+      position: absolute;
+        width: 100%;
+        bottom: 0px;
+    }
+
+    #loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+
+    .spinner {
+      border: 6px solid #e0e0e0;
+      border-top: 6px solid var(--main-blue);
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div id="loader">
+    <div class="spinner"></div>
+  </div>
+
+  <header>
+    <h1>Центр госуслуг "Мои документы"</h1>
+    <nav>
+      <a href="index.html">Главная</a>
+      <a href="services.html">Услуги</a>
+      <a href="contacts.html">Контакты</a>
+      <a href="survey.html">Опрос</a>
+    </nav>
+  </header>
+
+  <section class="contact-section">
+    <h2>Контактная информация</h2>
+    <div class="contact-info">
+      <p><strong>Адрес:</strong> г. Москва, ул. Примерная, д. 10</p>
+      <p><strong>Телефон:</strong> +7 (495) 123-45-67</p>
+      <p><strong>Email:</strong> info@moidoc.mos.ru</p>
+      <p><strong>Режим работы:</strong><br>
+        Пн–Пт: 08:00–20:00<br>
+        Сб: 09:00–18:00<br>
+        Вс: выходной
+      </p>
+      <p><strong>Социальные сети:</strong><br>
+        <a href="#">ВКонтакте</a> | <a href="#">Телеграм</a>
+      </p>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2025 Центр государственных услуг «Мои документы» Москвы. Все права защищены.</p>
+  </footer>
+
+  <script>
+    window.addEventListener('load', function () {
+      const loader = document.getElementById('loader');
+      setTimeout(() => {
+        loader.style.opacity = '0';
+        setTimeout(() => loader.style.display = 'none', 500);
+      }, 500);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Услуги — Мои документы</title>
+  <style>
+    :root {
+      --main-blue: #1976d2;
+      --light-blue: #e3f2fd;
+      --soft-gray: #f5f5f5;
+      --text-color: #333333;
+      --card-bg: #ffffff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--soft-gray);
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+
+    header {
+      background-color: var(--main-blue);
+      color: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+    }
+
+    nav {
+      margin-top: 0.5rem;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-right: 1rem;
+      transition: color 0.3s;
+    }
+
+    nav a:hover {
+      color: #cce6ff;
+    }
+
+    .services-section {
+      padding: 2rem;
+      background-color: #ffffff;
+    }
+
+    .services-section h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: var(--main-blue);
+      font-size: 1.8rem;
+    }
+
+    .services {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      padding: 2rem;
+    }
+
+    .service-card {
+      background-color: var(--card-bg);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+      transition: transform 0.2s ease-in-out;
+    }
+
+    .service-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .service-card h4 {
+      margin-bottom: 0.5rem;
+      color: var(--main-blue);
+    }
+
+    .service-card p {
+      font-size: 0.95rem;
+    }
+
+    footer {
+      background-color: var(--main-blue);
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      margin-top: 2rem;
+      position: absolute;
+        width: 100%;
+        bottom: 0px;
+    }
+
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 1.5rem;
+      }
+    }
+    #loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+
+    .spinner {
+      border: 6px solid #e0e0e0;
+      border-top: 6px solid var(--main-blue);
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+    <div id="loader">
+        <div class="spinner"></div>
+      </div>
+  <header>
+    <h1>Центр госуслуг "Мои документы"</h1>
+    <nav>
+      <a href="index.html">Главная</a>
+      <a href="services.html">Услуги</a>
+      <a href="contacts.html">Контакты</a>
+      <a href="survey.html">Опрос</a>
+    </nav>
+  </header>
+
+  <section class="services-section">
+    <h2>Все доступные услуги</h2>
+    <div class="services">
+      <div class="service-card">
+        <h4>Оформление паспорта</h4>
+        <p>Получение и замена паспорта гражданина РФ в кратчайшие сроки.</p>
+      </div>
+      <div class="service-card">
+        <h4>Регистрация по месту жительства</h4>
+        <p>Услуга постоянной или временной регистрации по адресу проживания.</p>
+      </div>
+      <div class="service-card">
+        <h4>Социальные выплаты</h4>
+        <p>Назначение и оформление различных видов социальной помощи.</p>
+      </div>
+      <div class="service-card">
+        <h4>Получение ИНН</h4>
+        <p>Постановка на учет в налоговом органе и получение ИНН.</p>
+      </div>
+      <div class="service-card">
+        <h4>Замена водительских прав</h4>
+        <p>Обновление и переоформление водительского удостоверения.</p>
+      </div>
+      <div class="service-card">
+        <h4>Справка об отсутствии судимости</h4>
+        <p>Запрос и получение справки для предъявления по месту требования.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2025 Центр государственных услуг «Мои документы» Москвы. Все права защищены.</p>
+  </footer>
+  <script>
+    window.addEventListener('load', function () {
+      const loader = document.getElementById('loader');
+      setTimeout(() => {
+        loader.style.opacity = '0';
+        setTimeout(() => loader.style.display = 'none', 500);
+      }, 500);
+    });
+  </script>
+</body>
+</html>
