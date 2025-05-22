@@ -46,6 +46,9 @@
             margin-bottom: 10px;
         }
 
+        a{
+            color: #e0e0e0;
+        }
         .subtitle {
             color: var(--secondary-color);
             font-size: 1.1rem;
@@ -189,6 +192,67 @@
         .loading-image.fade-out {
             opacity: 0;
         }
+
+        /* Стили для транскрипции */
+.transcription-block {
+    margin: 30px 0;
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+#inputWord {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    background: #2a2a2a;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    color: var(--text-color);
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+#inputWord:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 2px rgba(187, 134, 252, 0.2);
+}
+
+button[onclick="transcribe()"] {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--accent-color);
+    color: #000;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    font-size: 14px;
+}
+
+button[onclick="transcribe()"]:hover {
+    background-color: var(--secondary-color);
+    transform: translateY(-1px);
+}
+
+button[onclick="transcribe()"]:active {
+    transform: translateY(0);
+}
+
+#result {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: rgba(187, 134, 252, 0.1);
+    border-radius: 4px;
+    color: var(--accent-color);
+    font-size: 18px;
+    min-height: 50px;
+    border: 1px dashed var(--border-color);
+}
     </style>
 </head>
 <body>
@@ -481,11 +545,72 @@
                 </div>
             </div>
         </div>
-
+        
+        
+            <div class="message-card transcription-block">
+    <div class="message-header">
+        <span>Транскриптор</span>
+        <span>EN → RU</span>
+    </div>
+    <div class="message-content">
+        <input type="text" id="inputWord" placeholder="Введите предложение или слово для транскрипции">
+        <p>ТРАНСКИПЦИЯ МОЖЕТ БЫТЬ НЕ ТОЧНАЯ!</p>
+        <button onclick="transcribe()">Транскрипция</button>
+        <div id="result"></div>
+    </div>
+</div>
+        
+        
         <footer>
             <p>Сыщик &copy; <a href="https://lolz.live/syshchik/" style="text-decoration: none;">link</a></p>
         </footer>
+        
+    <script>
+        function transliterate(word) {
+            const rules = {
+                'a': 'а', 'b': 'б', 'c': 'к', 'd': 'д', 'e': 'е',
+                'f': 'ф', 'g': 'г', 'h': 'х', 'i': 'и', 'j': 'дж',
+                'k': 'к', 'l': 'л', 'm': 'м', 'n': 'н', 'o': 'о',
+                'p': 'п', 'q': 'к', 'r': 'р', 's': 'с', 't': 'т',
+                'u': 'у', 'v': 'в', 'w': 'в', 'x': 'кс', 'y': 'и',
+                'z': 'з', 'll': 'ло', 'th': 'з', 'ch': 'ч', 
+                'sh': 'ш', 'oo': 'у', 'ph': 'ф', 'you': 'ю',
+                'are': 'a'
+            };
 
+            word = word.toLowerCase();
+            let result = '';
+            let i = 0;
+
+            while (i < word.length) {
+                let matched = false;
+                if (i + 1 < word.length) {
+                    const pair = word.substr(i, 3);
+                    if (rules[pair]) {
+                        result += rules[pair];
+                        i += 2;
+                        matched = true;
+                    }
+                }
+                if (!matched) {
+                    const char = word[i];
+                    result += rules[char] || char;
+                    i++;
+                }
+            }
+
+            return result
+                .replace(/о$/, 'у')
+                .replace(/е$/, 'ей');
+        }
+
+        function transcribe() {
+            const input = document.getElementById('inputWord').value;
+            const output = document.getElementById('result');
+            output.textContent = transliterate(input);
+        }
+    </script>
+        
     <script>
         document.querySelectorAll('.copy-btn').forEach(button => {
             button.addEventListener('click', function() {
