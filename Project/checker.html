@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>dashboard.php</title>
+    <title>Встраивание dashboard.php с авторизацией</title>
     <style>
         #content {
             width: 100%;
@@ -20,7 +20,7 @@
     </style>
 </head>
 <body>
-    <h1>dashboard.php</h1>
+    <h1>Встраивание dashboard.php</h1>
     <div id="content">
         <iframe id="iframeEmbed" src="https://glofraud.com/index.php" width="100%" height="500" frameborder="0" sandbox="allow-scripts allow-same-origin allow-forms allow-top-navigation"></iframe>
     </div>
@@ -36,7 +36,6 @@
 
         function tryEmbed() {
             iframe.onload = () => {
-                console.log('iframe загружен');
                 setTimeout(() => {
                     try {
                         const currentUrl = iframe.contentWindow.location.href;
@@ -51,7 +50,6 @@
                 }, 5000);
             };
 
-          
             iframe.onerror = () => {
                 errorDiv.textContent = 'Ошибка загрузки iframe. Возможно, X-Frame-Options или редирект блокирует.';
                 switchToObject();
@@ -66,9 +64,7 @@
             `;
             const objectEmbed = document.getElementById('objectEmbed');
 
-            objectEmbed.onload = () => {
-                console.log('object загружен');
-            };
+            objectEmbed.onload = () => {};
             objectEmbed.onerror = () => {
                 errorDiv.textContent = 'Ошибка загрузки object.';
                 switchToEmbed();
@@ -90,7 +86,6 @@
             };
         }
 
-       
         tryEmbed();
     </script>
 </body>
