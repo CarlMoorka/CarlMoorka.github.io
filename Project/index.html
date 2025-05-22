@@ -566,49 +566,117 @@ button[onclick="transcribe()"]:active {
         </footer>
         
     <script>
-        function transliterate(word) {
-            const rules = {
-                'a': 'а', 'b': 'б', 'c': 'к', 'd': 'д', 'e': 'е',
-                'f': 'ф', 'g': 'г', 'h': 'х', 'i': 'и', 'j': 'дж',
-                'k': 'к', 'l': 'л', 'm': 'м', 'n': 'н', 'o': 'о',
-                'p': 'п', 'q': 'к', 'r': 'р', 's': 'с', 't': 'т',
-                'u': 'у', 'v': 'в', 'w': 'в', 'x': 'кс', 'y': 'и',
-                'z': 'з', 'll': 'ло', 'th': 'з', 'ch': 'ч', 
-                'sh': 'ш', 'oo': 'у', 'ph': 'ф', 'you': 'ю',
-                'are': 'a'
-            };
+       function transliterate(word) {
+    const rules = {
+        
+        'tion': 'шн',
+        'sion': 'жн',
+        'cial': 'шл',
+        'ture': 'чур',
+        
+       
+        'you': 'ю',
+        'are': 'ар',
+        'ing': 'инг',
+        'sch': 'щ',
+        'eur': 'ёр',
+        'qua': 'ква',
+        'que': 'кве',
+        'qui': 'кви',
+        
+        
+        'll': 'л', 
+        'th': 'з',
+        'ch': 'ч',
+        'sh': 'ш',
+        'ph': 'ф',
+        'ck': 'к',
+        'wh': 'в',
+        'qu': 'кв',
+        'ee': 'и',
+        'oo': 'у',
+        'ea': 'и',
+        'ou': 'ау',
+        'ai': 'эй',
+        'ei': 'ай',
+        'gh': 'г',
+        'kn': 'н',
+        'wr': 'р',
+        'ss': 'сс',
+        'tt': 'тт',
+        'ng': 'нг',
+        'rh': 'р',
+        'dg': 'дж',
+        'tch': 'ч',
+        
+        
+        'a': 'а', 'b': 'б', 'c': 'к', 'd': 'д', 'e': 'е',
+        'f': 'ф', 'g': 'г', 'h': 'х', 'i': 'и', 'j': 'дж',
+        'k': 'к', 'l': 'л', 'm': 'м', 'n': 'н', 'o': 'о',
+        'p': 'п', 'q': 'к', 'r': 'р', 's': 'с', 't': 'т',
+        'u': 'у', 'v': 'в', 'w': 'в', 'x': 'кс', 'y': 'и',
+        'z': 'з', "'": 'ь'
+    };
 
-            word = word.toLowerCase();
-            let result = '';
-            let i = 0;
+    word = word.toLowerCase();
+    let result = '';
+    let i = 0;
 
-            while (i < word.length) {
-                let matched = false;
-                if (i + 1 < word.length) {
-                    const pair = word.substr(i, 3);
-                    if (rules[pair]) {
-                        result += rules[pair];
-                        i += 2;
-                        matched = true;
-                    }
-                }
-                if (!matched) {
-                    const char = word[i];
-                    result += rules[char] || char;
-                    i++;
-                }
+    while (i < word.length) {
+        let matched = false;
+        
+       
+        if (i + 3 < word.length) {
+            const quad = word.substr(i, 4);
+            if (rules[quad]) {
+                result += rules[quad];
+                i += 4;
+                matched = true;
             }
-
-            return result
-                .replace(/о$/, 'у')
-                .replace(/е$/, 'ей');
         }
-
-        function transcribe() {
-            const input = document.getElementById('inputWord').value;
-            const output = document.getElementById('result');
-            output.textContent = transliterate(input);
+        
+       
+        if (!matched && i + 2 < word.length) {
+            const trio = word.substr(i, 3);
+            if (rules[trio]) {
+                result += rules[trio];
+                i += 3;
+                matched = true;
+            }
         }
+        
+      
+        if (!matched && i + 1 < word.length) {
+            const pair = word.substr(i, 2);
+            if (rules[pair]) {
+                result += rules[pair];
+                i += 2;
+                matched = true;
+            }
+        }
+        
+        
+        if (!matched) {
+            const char = word[i];
+            result += rules[char] || char;
+            i++;
+        }
+    }
+
+    
+    return result
+        .replace(/([а-я])о$/g, '$1у')    
+        .replace(/([бвгджзклмнпрстфхцчшщ])ь/g, '$1')
+        .replace(/е$/, 'ей')            
+        .replace(/й$/, 'йя')             
+        .replace(/([аеёиоуыэюя])й/g, '$1й');
+}
+
+function transcribe() {
+    const input = document.getElementById('inputWord').value;
+    const output = document.getElementById('result');
+    output.textContent = transliterate(input);
+}
     </script>
         
     <script>
