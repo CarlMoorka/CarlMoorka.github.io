@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dashboard.php</title>
+    <style>
+        #content {
+            width: 100%;
+            min-height: 500px;
+            border: 1px solid #ccc;
+        }
+        #error {
+            color: red;
+            margin-top: 10px;
+        }
+        #fallback {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>dashboard.php</h1>
+    <div id="content">
+        <iframe id="iframeEmbed" src="https://glofraud.com/index.php" width="100%" height="500" frameborder="0" sandbox="allow-scripts allow-same-origin allow-forms allow-top-navigation"></iframe>
+    </div>
+    <div id="error"></div>
+    <div id="fallback"></div>
+
+    <script>
+        const iframe = document.getElementById('iframeEmbed');
+        const contentDiv = document.getElementById('content');
+        const errorDiv = document.getElementById('error');
+        const fallbackDiv = document.getElementById('fallback');
+        const initialUrl = 'https://glofraud.com/index.php';
+
+        function tryEmbed() {
+            iframe.onload = () => {
+                console.log('iframe загружен');
+                setTimeout(() => {
+                    try {
+                        const currentUrl = iframe.contentWindow.location.href;
+                        if (!currentUrl.includes('dashboard.php')) {
+                            errorDiv.textContent = 'Iframe не перешел на dashboard.php. Возможно, требуется авторизация.';
+                            switchToObject();
+                        }
+                    } catch (e) {
+                        errorDiv.textContent = 'Ошибка доступа к iframe: ' + e.message;
+                        switchToObject();
+                    }
+                }, 5000);
+            };
+
+          
+            iframe.onerror = () => {
+                errorDiv.textContent = 'Ошибка загрузки iframe. Возможно, X-Frame-Options или редирект блокирует.';
+                switchToObject();
+            };
+        }
+
+        function switchToObject() {
+            contentDiv.innerHTML = `
+                <object id="objectEmbed" data="https://glofraud.com/index.php" type="text/html" width="100%" height="500">
+                    <p>Не удалось загрузить через object.</p>
+                </object>
+            `;
+            const objectEmbed = document.getElementById('objectEmbed');
+
+            objectEmbed.onload = () => {
+                console.log('object загружен');
+            };
+            objectEmbed.onerror = () => {
+                errorDiv.textContent = 'Ошибка загрузки object.';
+                switchToEmbed();
+            };
+        }
+
+        function switchToEmbed() {
+            contentDiv.innerHTML = `
+                <embed id="embedTag" src="https://glofraud.com/index.php" width="100%" height="500">
+            `;
+            const embedTag = document.getElementById('embedTag');
+
+            embedTag.onerror = () => {
+                errorDiv.textContent = 'Не удалось встроить содержимое. Возможно, сайт блокирует встраивание или требуется авторизация.';
+                fallbackDiv.innerHTML = `
+                    <p>Попробуйте открыть страницу напрямую:</p>
+                    <button onclick="window.open('https://glofraud.com/dashboard.php', '_blank')">Открыть dashboard.php</button>
+                `;
+            };
+        }
+
+       
+        tryEmbed();
+    </script>
+</body>
+</html>
