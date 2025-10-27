@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Настройка Telegram-бота</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #0b0b0d, #141416, #1e1e21);
+      color: #e4e4e7;
+      overflow-x: hidden;
+    }
+
+    #loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #0d0d0f;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      animation: fadeOut 1s ease 2s forwards;
+    }
+
+    #loader img {
+      width: 50%;
+      max-width: 200px;
+      height: auto;
+      animation: pulse 2s infinite;
+      user-select: none;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 0.6; filter: drop-shadow(0 0 8px #00c6ff80); }
+      50% { transform: scale(1.1); opacity: 1; filter: drop-shadow(0 0 15px #00c6ffcc); }
+      100% { transform: scale(1); opacity: 0.6; filter: drop-shadow(0 0 8px #00c6ff80); }
+    }
+
+    @keyframes fadeOut {
+      to { opacity: 0; visibility: hidden; }
+    }
+
+    /* === ОСНОВНОЙ КОНТЕНТ === */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 80px 20px;
+      opacity: 0;
+      animation: appear 1s ease 2.3s forwards;
+    }
+
+    @keyframes appear {
+      to { opacity: 1; }
+    }
+
+    h1 {
+      font-size: 2.5em;
+      text-align: center;
+      margin-bottom: 30px;
+      background: linear-gradient(90deg, #00e0ff, #0066ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 10px #00bfff33;
+    }
+
+    h2 {
+      margin-top: 40px;
+      font-size: 1.6em;
+      color: #00bfff;
+      border-left: 4px solid #00bfff;
+      padding-left: 10px;
+    }
+
+    p {
+      margin: 10px 0 15px;
+      line-height: 1.6;
+      color: #d1d1d4;
+    }
+
+    ul {
+      margin-left: 20px;
+      color: #c7c7ca;
+    }
+
+    .step {
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 20px;
+      box-shadow: 0 0 25px rgba(0,0,0,0.6);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .step:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 25px rgba(0,150,255,0.15);
+    }
+
+    code {
+      background: rgba(0,0,0,0.4);
+      padding: 4px 6px;
+      border-radius: 4px;
+      color: #00ffe1;
+      font-family: monospace;
+    }
+
+    a {
+      color: #00bfff;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .highlight {
+      background: rgba(0,150,255,0.08);
+      border-left: 3px solid #00bfff;
+      padding: 10px;
+      border-radius: 6px;
+      margin: 10px 0;
+      font-family: monospace;
+      color: #a9faff;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 60px;
+      font-size: 0.9em;
+      color: #666;
+    }
+
+    .btn {
+      display: inline-block;
+      margin-top: 20px;
+      background: linear-gradient(90deg, #00bfff, #0072ff);
+      padding: 12px 28px;
+      border-radius: 10px;
+      color: #fff;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      box-shadow: 0 0 15px rgba(0,150,255,0.25);
+      transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+      background: linear-gradient(90deg, #0072ff, #00bfff);
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(0,180,255,0.4);
+    }
+  </style>
+</head>
+<body>
+
+  <div id="loader">
+    <img src="logo.png" alt="BotSetup Logo" style="max-width: 50%;">
+  </div>
+
+  <div class="container">
+    <h1>Инструкция по настройке бота</h1>
+
+    <div class="step">
+      <h2>1. Создание проекта в Google Cloud Console</h2>
+      <p>Перейдите на сайт <a href="https://console.cloud.google.com/" target="_blank">https://console.cloud.google.com/</a>.</p>
+      <ul>
+        <li>Нажмите на выпадающее меню проектов (вверху слева).</li>
+        <li>Выберите <b>New Project</b>.</li>
+        <li>Дайте проекту имя, например <code>GoogleSheetsAPI</code>.</li>
+      </ul>
+    </div>
+
+    <div class="step">
+      <h2>2. Включение API для Google Sheets и Drive</h2>
+      <p>В левом меню выберите <b>APIs & Services → Library</b>.</p>
+      <p>Найдите <code>Google Sheets API</code> и <code>Google Drive API</code>, затем нажмите <b>Enable</b> для каждого.</p>
+    </div>
+
+    <div class="step">
+      <h2>3. Создание Service Account и получение JSON-файла</h2>
+      <p>Перейдите в <b>APIs & Services → Credentials</b> и нажмите:</p>
+      <div class="highlight">Create Credentials → Service Account</div>
+      <p>Укажите имя, например <code>sheets-access</code>, и нажмите <b>Create and Continue</b>.</p>
+      <p>После создания откройте аккаунт → вкладка <b>Keys</b> → <b>Add Key → Create new key → JSON</b>.</p>
+      <p>Файл автоматически скачается, например <code>project-name-123456789.json</code>.</p>
+    </div>
+
+    <div class="step">
+      <h2>4. Настройка переменных в боте</h2>
+
+      <h3>🔹 <code>CREDENTIALS_FILE</code></h3>
+      <p>Отправляете <b>текст JSON</b>, который вы получили, а не сам файл.</p>
+
+      <h3>🔹 <code>SPREADSHEET_ID</code></h3>
+      <p>Это ID вашей Google таблицы, например:</p>
+      <div class="highlight">https://docs.google.com/spreadsheets/d/1QYoRHQ34-TlbjUzfTS4Gwr6RFI6c3-u4PXcNJrLfr_Y/edit?gid=0</div>
+      <p>В бота вставляете только:</p>
+      <div class="highlight">1QYoRHQ34-TlbjUzfTS4Gwr6RFI6c3-u4PXcNJrLfr_Y</div>
+      <p>Ссылка должна иметь права редактирования.</p>
+
+      <h3>🔹 <code>SHEET_NAME</code></h3>
+      <p>Название листа, где находятся аккаунты.</p>
+
+      <h3>🔹 <code>LOLZTEAM_TOKEN</code></h3>
+      <p>Ваш токен с <b>маркет-доступом</b>, чтобы бот мог просматривать почту Outlook (через технологию Thunderboard). А так же <b>обрабатывать продажи</b></p>
+    </div>
+
+    <footer>© 2025 <a href="https://t.me/SyshchikProduction">Сыщик Продакшен.</a> Приватный софт по личному заказу <a href="https://lolz.live/meshalkin/">Meshalkin Empire</a>  | Все права защищены</footer>
+  </div>
+
+  <script>
+    setTimeout(() => {
+      document.getElementById('loader').style.display = 'none';
+    }, 3000);
+  </script>
+
+</body>
+</html>
