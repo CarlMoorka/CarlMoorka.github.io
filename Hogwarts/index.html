@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Дурдом Хогвартса — Огненный Флуд</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700;900&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.1/tsparticles.bundle.min.js"></script>
+
+  <style>
+    :root{
+      --fire-1:#ff3d00;
+      --fire-2:#ff9100;
+      --fire-3:#ffd600;
+      --glass:rgba(255,255,255,0.08);
+      --border:rgba(255,255,255,0.15);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;background:radial-gradient(circle at center,#220000,#000000 80%);
+      font-family:'Montserrat';color:#ffe9d1;overflow-x:hidden;
+    }
+    #tsparticles{position:fixed;inset:0;z-index:-3}
+    .trail{position:fixed;width:14px;height:14px;border-radius:50%;pointer-events:none;background:radial-gradient(circle,var(--fire-3),var(--fire-1));opacity:0.9;filter:blur(4px);z-index:40}
+    .phoenix{position:fixed;top:20vh;left:-260px;width:260px;height:auto;z-index:30;opacity:0.95;filter:drop-shadow(0 0 28px #ff6a00)}
+    header{
+      padding:24px 6vw;display:flex;align-items:center;justify-content:space-between;
+      backdrop-filter:blur(10px);background:rgba(255,50,0,0.04);border-bottom:1px solid var(--border);z-index:20
+    }
+    .btn{padding:12px 20px;border-radius:14px;background:linear-gradient(90deg,var(--fire-1),var(--fire-2));border:none;cursor:pointer;color:white;font-weight:700;box-shadow:0 6px 28px rgba(255,80,0,0.4)}
+    .hero{padding:120px 6vw;display:flex;flex-direction:column;align-items:center;text-align:center;z-index:10;position:relative}
+    .title{font-family:'Playfair Display';font-size:72px;line-height:1.05;margin:0;color:transparent;background:linear-gradient(90deg,#fff3e0,#ff6d00,#ff3d00);-webkit-background-clip:text}
+    .subtitle{font-size:20px;max-width:700px;opacity:0.95;margin-top:18px}
+    .section{
+      padding:80px 6vw;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;z-index:10
+    }
+    .card{padding:24px;border-radius:16px;border:1px solid var(--border);background:rgba(255,255,255,0.03);backdrop-filter:blur(12px)}
+    .card h3{margin-top:0;font-size:26px;color:#ffb686}
+    .flash{position:fixed;inset:0;background:radial-gradient(circle,#ff6d00,transparent);opacity:0;pointer-events:none;z-index:9999}
+    footer{padding:40px;text-align:center;opacity:0.8;font-size:14px;z-index:10}
+    #preloader{position:fixed;inset:0;background:#000;display:flex;align-items:center;justify-content:center;z-index:100000}
+    .flame-wrap{position:relative;width:100%;height:100%;overflow:hidden}
+    .flame{position:absolute;bottom:-10%;left:50%;transform-origin:center bottom;width:60%;height:60%;max-width:1200px;filter:blur(20px);opacity:0.95}
+    .flame::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 10%,rgba(255,220,120,0.9),rgba(255,80,0,0.6) 30%, rgba(120,10,0,0.0) 60%);mix-blend-mode:screen}
+    @media(max-width:900px){.section{grid-template-columns:1fr}.title{font-size:48px}}
+  </style>
+</head>
+<body>
+
+  <audio id="fireSound" src="https://cdn.pixabay.com/download/audio/2022/10/03/audio_4f66c1f9e3.mp3?filename=big-fire-111538.mp3"></audio>
+  <audio id="phoenixCry" src="https://cdn.pixabay.com/download/audio/2021/08/04/audio_3f0b1b5f1e.mp3?filename=eagle-cry-6059.mp3"></audio>
+
+  <div id="preloader" style="position:fixed;inset:0;display:flex;justify-content:center;align-items:center;z-index:100000">
+    <div class="preloader-center" style="position:relative;width:400px;height:400px;">
+      <div id="fireRing"></div>
+      <img src="phoenix.png" class="phoenix" style="width:220px;position:relative;top:0%;left:25%;transform:translate(-50%, -50%);z-index:60;animation:pulse 2s infinite;">
+    </div>
+    <div id="fireParticles" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;"></div>
+  </div>
+
+  <div id="tsparticles"></div>
+  <img class="phoenix" id="phoenix" src="phoenix.png" alt="phoenix">
+
+  <div id="app">
+    <header>
+      <div style="font-size:22px;font-weight:800">🔥 Дурдом Хогвартса</div>
+      <div style="display:flex;gap:12px;align-items:center">
+        <button class="btn" @click="join=true">Вступить</button>
+      </div>
+    </header>
+
+    <section class="hero">
+      <h1 class="title">Добро пожаловать в Дурдом Хогвартса</h1>
+      <p class="subtitle">Фениксы кричат. Студенты орут. Призраки летаю. Магический хаос - в лучшем виде.</p>
+    </section>
+
+    <section class="section">
+      <div class="card">
+        <h3>🔥 Споры до пожара</h3>
+        <p>Кто мощнее - Снейп, Дамблдор или Гарри?</p>
+      </div>
+      <div class="card">
+        <h3>🔥 Шутки вылетают из печи</h3>
+        <p>Горячее, чем огонь Фоукса.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="card">
+        <h3>🔥 Теории без тормозов</h3>
+        <p>Абсурд на уровне магии хаоса.</p>
+      </div>
+      <div class="card">
+        <h3>🔥 Правила</h3>
+        <a href="rules.html"><button class="btn">Прочитать</button></a>
+      </div>
+    </section>
+
+    <footer>© {{year}} Дурдом Хогвартса. Хаос вечен.</footer>
+
+    <div v-if="join" style="position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;z-index:50">
+      <div class="card" style="width:500px;max-width:90%">
+        <h3>Написать для вступления</h3>
+        <a href="tg://resolve?domain=Norvals"><button class="btn" style="margin-top:14px;width:100%" @click="join=false">@Norvals - Владелец</button></a>
+       <a href="tg://resolve?domain=NicknameRU"><button class="btn" style="margin-top:14px;width:100%" @click="join=false">@NicknameRU - СоВладелец</button></a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const { createApp } = Vue;
+
+    createApp({
+      data(){ return{join:false,year:new Date().getFullYear(),soundOn:true} },
+      methods:{
+        preview(){ 
+          if(this.soundOn){ document.getElementById('phoenixCry').currentTime=0; document.getElementById('phoenixCry').play(); }
+          gsap.to('#phoenix',{x:1600,duration:4,ease:'power2.inOut',onComplete:()=>gsap.set('#phoenix',{x:-300})});
+        },
+        toggleSound(){ this.soundOn = !this.soundOn; const f=document.getElementById('fireSound'); if(!this.soundOn){ f.pause(); } }
+      },
+      mounted(){
+        const fire = document.getElementById('fireSound');
+
+        tsParticles.load('tsparticles',{
+          particles:{number:{value:60,density:{enable:true,area:800}},size:{value:{min:1,max:5}},color:{value:['#ff6d00','#ff3d00','#ffd600']},opacity:{value:0.85,random:{enable:true,min:0.2,max:0.9}},move:{enable:true,speed:1.2}},
+          interactivity:{events:{onHover:{enable:true,mode:'repulse'},onClick:{enable:true,mode:'push'}}}
+        });
+
+        gsap.to('#phoenix',{y:-20,yoyo:true,repeat:-1,duration:3.8,ease:'sine.inOut'});
+
+        window.addEventListener('mousemove',e=>{
+          const t=document.createElement('div');
+          t.className='trail';
+          t.style.left=(e.clientX - 6)+'px';
+          t.style.top=(e.clientY - 6)+'px';
+          document.body.appendChild(t);
+          gsap.to(t,{scale:0,opacity:0,duration:0.6,ease:'power1.out',onComplete:()=>t.remove()});
+        });
+
+        window.addEventListener('scroll',()=>{
+          const f=document.getElementById('flash');
+          if(f) gsap.fromTo(f,{opacity:0.35},{opacity:0,duration:0.45});
+        });
+
+        const pre = document.getElementById('preloader');
+        const flame1 = document.getElementById('flame1');
+        const flame2 = document.getElementById('flame2');
+
+        const tl = gsap.timeline({onComplete:()=>{
+          gsap.to(pre,{opacity:0,duration:1,delay:0.25,onComplete:()=>{ pre.style.display='none'; }});
+          gsap.from('.title',{y:80,opacity:0,duration:1.2,ease:'power3.out'});
+          gsap.from('.subtitle',{y:30,opacity:0,duration:1.0,delay:0.12});
+        }});
+
+        if(this.soundOn){ try{ fire.currentTime=0; fire.volume=0.7; fire.play(); }catch(e){} }
+
+        tl.fromTo(flame1,{scale:0.6,opacity:0.9,rotation:-6},{scale:1.3,opacity:1,duration:1.2,ease:'power2.out'})
+          .fromTo(flame2,{scale:0.7,opacity:0.8,rotation:6},{scale:1.4,opacity:0.95,duration:1.2,ease:'power2.out'},'<0.1')
+          .to([flame1,flame2],{y:-120,scale:1.6,opacity:0.6,duration:0.9,ease:'power2.inOut',delay:0.2})
+          .to([flame1,flame2],{opacity:0,scale:2.2,duration:0.9,stagger:0.08});
+
+        setTimeout(()=>{ try{ fire.pause(); }catch(e){} },4000);
+
+      }
+    }).mount('#app');
+  </script>
+
+<style>
+  @keyframes flashAppear {
+    0% { opacity: 0; transform: scale(0.2); filter: brightness(5); }
+    60% { opacity: 1; transform: scale(1.15); filter: brightness(2); }
+    100% { opacity: 1; transform: scale(1); filter: brightness(1); }
+  }
+  #preloader.fire-melt {
+    animation: meltDown 1.6s ease forwards;
+  }
+  @keyframes meltDown {
+    0% { clip-path: inset(0 0 0 0); }
+    100% { clip-path: inset(100% 0 0 0); }
+  }
+  #fireRing {
+    position: absolute;
+    width: 380px;
+    height: 380px;
+    border-radius: 50%;
+    border: 6px solid rgba(255,120,0,0.4);
+    box-shadow: 0 0 60px rgba(255,60,0,0.8), inset 0 0 40px rgba(255,100,0,0.8);
+    animation: ringPulse 2.2s infinite ease-in-out;
+    z-index: 5;
+  }
+  @keyframes ringPulse {
+    0% { transform: scale(0.92); opacity: 0.7; }
+    50% { transform: scale(1.05); opacity: 1; }
+    100% { transform: scale(0.92); opacity: 0.7; }
+  }
+</style>
+
+<script>
+  const phoenix = document.querySelector('.phoenix');
+  phoenix.style.animation = "flashAppear 1.4s ease forwards, pulse 2s infinite 1.4s";
+
+  const ring = document.createElement('div');
+  ring.id = "fireRing";
+  document.getElementById('preloader').appendChild(ring);
+
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      phoenix.style.filter = "brightness(3)";
+      phoenix.style.transition = "filter 0.25s";
+      setTimeout(() => {
+        document.getElementById('preloader').classList.add('fire-melt');
+      }, 250);
+    }, 1000);
+  });
+</script>
+
+</body>
+</html>
