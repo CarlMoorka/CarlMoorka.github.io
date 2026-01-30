@@ -1,0 +1,49 @@
+function doGet(e) {
+  try {
+    var row = parseInt(e.parameter.row, 10);
+    var col = e.parameter.col;
+    var value = e.parameter.value;
+
+    if (!row || row < 1) {
+      return out({ status: "ERROR", message: "Invalid row" });
+    }
+
+    if (!col || !/^[A-Z]+$/i.test(col)) {
+      return out({ status: "ERROR", message: "Invalid column" });
+    }
+
+    if (value === undefined) {
+      value = "";
+    }
+
+    col = col.toUpperCase();
+
+    var sheet = SpreadsheetApp
+      .getActiveSpreadsheet()
+      .getActiveSheet();
+
+    var cell = col + row;
+
+    sheet.getRange(cell).setValue(value);
+
+    return out({
+      status: "OK",
+      row: row,
+      column: col,
+      value: value,
+      message: "Value written"
+    });
+
+  } catch (err) {
+    return out({
+      status: "ERROR",
+      message: err.toString()
+    });
+  }
+}
+
+function out(obj) {
+  return ContentService
+    .createTextOutput(JSON.stringify(obj))
+    .setMimeType(ContentService.MimeType.JSON);
+}

@@ -1,0 +1,65 @@
+function doGet(e) {
+  try {
+    var row = parseInt(e.parameter.row, 10);
+    if (!row || row < 1) {
+      return out({status: "ERROR", message: "Invalid row"});
+    }
+
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    var account = sheet.getRange(row, 8).getValue(); // H
+
+    account = account ? account.toString().trim() : "";
+
+    if (account === "") {
+      return out({
+        status: "SKIP",
+        row: row,
+        reason: "EMPTY",
+        message: "Столбец H пуст"
+      });
+    }
+
+    if (/^https?:\/\//i.test(account)) {
+      return out({
+        status: "SKIP",
+        row: row,
+        reason: "ALREADY_HTTP",
+        value: account,
+        message: "http/https уже есть"
+      });
+    }
+
+    if (account.indexOf("@") === -1 || account.indexOf(":") === -1) {
+      return out({
+        status: "SKIP",
+        row: row,
+        reason: "INVALID_FORMAT",
+        value: account,
+        message: "Не email:pass"
+      });
+    }
+
+    var fixed = "http://" + account;
+    sheet.getRange(row, 8).setValue(fixed);
+
+    return out({
+      status: "FIXED",
+      row: row,
+      old: account,
+      value: fixed,
+      message: "Добавлен http://"
+    });
+
+  } catch (e) {
+    return out({
+      status: "ERROR",
+      message: e.toString()
+    });
+  }
+}
+
+function out(obj) {
+  return ContentService
+    .createTextOutput(JSON.stringify(obj))
+    .setMimeType(ContentService.MimeType.JSON);
+}

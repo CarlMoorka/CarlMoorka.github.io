@@ -1,0 +1,73 @@
+function doGet(e) {
+  try {
+    var row = parseInt(e.parameter.row, 10);
+    if (!row || row < 1) {
+      return out({status: "ERROR", message: "Invalid row"});
+    }
+
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+
+    var link = sheet.getRange(row, 1).getValue();   // A
+    var account = sheet.getRange(row, 8).getValue(); // H
+
+    link = link ? link.toString().trim() : "";
+    account = account ? account.toString().trim() : "";
+
+    if (link !== "") {
+      return out({
+        status: "SKIP",
+        row: row,
+        reason: "LINK_EXISTS",
+        message: "В столбце A уже есть ссылка"
+      });
+    }
+
+    if (account === "") {
+      return out({
+        status: "SKIP",
+        row: row,
+        reason: "EMPTY_ACCOUNT",
+        message: "Столбец H пуст"
+      });
+    }
+
+    if (/^https?:\/\//i.test(account)) {
+      return out({
+        status: "SKIP",
+        row: row,
+        reason: "HTTP_PREFIX",
+        value: account,
+        message: "В аккаунте есть http/https — пропускаем"
+      });
+    }
+
+    if (account.indexOf("@") === -1 || account.indexOf(":") === -1) {
+      return out({
+        status: "SKIP",
+        row: row,
+        reason: "INVALID_FORMAT",
+        value: account,
+        message: "Неверный формат аккаунта"
+      });
+    }
+
+    return out({
+      status: "OK",
+      row: row,
+      value: account,
+      message: "Аккаунт подходит для работы"
+    });
+
+  } catch (e) {
+    return out({
+      status: "ERROR",
+      message: e.toString()
+    });
+  }
+}
+
+function out(obj) {
+  return ContentService
+    .createTextOutput(JSON.stringify(obj))
+    .setMimeType(ContentService.MimeType.JSON);
+}

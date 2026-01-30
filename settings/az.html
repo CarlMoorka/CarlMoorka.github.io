@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API макросы GOOGLE</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #0b0b0d, #141416, #1e1e21);
+      color: #e4e4e7;
+      overflow-x: hidden;
+    }
+
+    #loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #0d0d0f;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      animation: fadeOut 1s ease 2s forwards;
+    }
+
+    #loader img {
+      width: 50%;
+      max-width: 200px;
+      height: auto;
+      animation: pulse 2s infinite;
+      user-select: none;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 0.6; filter: drop-shadow(0 0 8px #00c6ff80); }
+      50% { transform: scale(1.1); opacity: 1; filter: drop-shadow(0 0 15px #00c6ffcc); }
+      100% { transform: scale(1); opacity: 0.6; filter: drop-shadow(0 0 8px #00c6ff80); }
+    }
+
+    @keyframes fadeOut {
+      to { opacity: 0; visibility: hidden; }
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 80px 20px;
+      opacity: 0;
+      animation: appear 1s ease 2.3s forwards;
+    }
+
+    @keyframes appear {
+      to { opacity: 1; }
+    }
+
+    h1 {
+      font-size: 2.8em;
+      text-align: center;
+      margin-bottom: 50px;
+      background: linear-gradient(90deg, #00e0ff, #0066ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 10px #00bfff33;
+      font-weight: 700;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #d1d1d4;
+      margin-bottom: 50px;
+      font-size: 1.1em;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.6;
+    }
+
+    .macros-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+      gap: 25px;
+      margin-bottom: 60px;
+    }
+
+    .macro-card {
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 0 25px rgba(0,0,0,0.6);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border: 1px solid rgba(255,255,255,0.05);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .macro-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 25px rgba(0,150,255,0.15);
+    }
+
+    .macro-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .macro-icon {
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, #00bfff, #0072ff);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 15px;
+      font-size: 1.5em;
+    }
+
+    .macro-title {
+      font-size: 1.4em;
+      font-weight: 600;
+      color: #ffffff;
+      line-height: 1.3;
+    }
+
+    .macro-file {
+      background: rgba(0,0,0,0.4);
+      padding: 12px 15px;
+      border-radius: 8px;
+      margin: 15px 0;
+      border-left: 3px solid #00bfff;
+      font-family: monospace;
+      color: #00ffe1;
+      font-size: 1em;
+      word-break: break-all;
+    }
+
+    .macro-description {
+      color: #d1d1d4;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      flex-grow: 1;
+    }
+
+    .btn {
+      display: inline-block;
+      background: linear-gradient(90deg, #00bfff, #0072ff);
+      padding: 12px 28px;
+      border-radius: 10px;
+      color: #fff;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      box-shadow: 0 0 15px rgba(0,150,255,0.25);
+      transition: all 0.3s ease;
+      text-align: center;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      font-size: 1em;
+    }
+
+    .btn:hover {
+      background: linear-gradient(90deg, #0072ff, #00bfff);
+      transform: scale(1.03);
+      box-shadow: 0 0 20px rgba(0,180,255,0.4);
+      text-decoration: none;
+    }
+
+    .btn i {
+      margin-right: 8px;
+    }
+
+    .instructions {
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 12px;
+      padding: 30px;
+      margin-top: 40px;
+      box-shadow: 0 0 25px rgba(0,0,0,0.6);
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .instructions h2 {
+      margin-bottom: 20px;
+      font-size: 1.6em;
+      color: #00bfff;
+      border-left: 4px solid #00bfff;
+      padding-left: 10px;
+    }
+
+    .instructions ol {
+      margin-left: 20px;
+      color: #c7c7ca;
+    }
+
+    .instructions li {
+      margin: 10px 0;
+      line-height: 1.6;
+    }
+
+    .highlight {
+      background: rgba(0,150,255,0.08);
+      border-left: 3px solid #00bfff;
+      padding: 10px;
+      border-radius: 6px;
+      margin: 10px 0;
+      font-family: monospace;
+      color: #a9faff;
+      font-size: 0.95em;
+    }
+
+    footer {
+    text-align: center;
+    margin-top: 60px;
+    font-size: 0.9em;
+    color: #666;
+}
+
+    @media (max-width: 768px) {
+      .macros-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      h1 {
+        font-size: 2.2em;
+      }
+      
+      .container {
+        padding: 60px 15px;
+      }
+      
+      .macro-card {
+        padding: 20px;
+      }
+      
+      .macro-title {
+        font-size: 1.2em;
+      }
+    }
+	
+	a {
+    color: #00bfff;
+    text-decoration: none;
+}
+  </style>
+</head>
+<body>
+    <div id="loader">
+        <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" alt="Loading...">
+    </div>
+
+    <div class="container">
+        <h1>API макросы GOOGLE</h1>
+        <p class="subtitle">Коллекция готовых макросов для автоматизации работы с Google Таблицами. Каждая кнопка ведет к файлу с соответствующим макросом.</p>
+        
+        <div class="macros-grid">
+            <div class="macro-card">
+                <div class="macro-header">
+                    <div class="macro-icon">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <div class="macro-title">API макрос GOOGLE(Взятие аккаунта из таблицы)</div>
+                </div>
+                <div class="macro-file">API макрос GOOGLE(Взятие аккаунта из таблицы)</div>
+                <div class="macro-description">
+                    Макрос для извлечения информации об аккаунте из Google Таблицы. 
+                </div>
+                <a href="az/APIGOOGLE1.txt" class="btn">
+                    <i class="fas fa-external-link-alt"></i> Открыть макрос
+                </a>
+            </div>
+            
+            <div class="macro-card">
+                <div class="macro-header">
+                    <div class="macro-icon">
+                        <i class="fas fa-link"></i>
+                    </div>
+                    <div class="macro-title">API макрос GOOGLE(Приписка http)</div>
+                </div>
+                <div class="macro-file">API макрос GOOGLE(Приписка http)</div>
+                <div class="macro-description">
+                   После того как софт взял аккаунт в работу, он помечает почту в самом начале таким «предлогом» как http://, это нужно для того, что бы аккаунт не брался в работу повторно, в случаях если с ним произошла ошибка на любом из моментов работы софта(Неудачная попытка отключения 2FA на аккаунт EpicGames и тд.)
+                </div>
+                <a href="az/APIGOOGLE2.txt" class="btn">
+                    <i class="fas fa-external-link-alt"></i> Открыть макрос
+                </a>
+            </div>
+            
+            <div class="macro-card">
+                <div class="macro-header">
+                    <div class="macro-icon">
+                        <i class="fas fa-unlink"></i>
+                    </div>
+                    <div class="macro-title">API макрос GOOGLE(Удаление http приписки, если галочка активна)</div>
+                </div>
+                <div class="macro-file">API макрос GOOGLE(Удаление http приписки, если галочка активна)</div>
+                <div class="macro-description">
+                    Удаляет префиксы "http://" и "https://" из URL-адресов в таблице, но только если активна соответствующая галочка.
+                </div>
+                <a href="az/APIGOOGLE3.txt" class="btn">
+                    <i class="fas fa-external-link-alt"></i> Открыть макрос
+                </a>
+            </div>
+            
+            <div class="macro-card">
+                <div class="macro-header">
+                    <div class="macro-icon">
+                        <i class="fas fa-table-columns"></i>
+                    </div>
+                    <div class="macro-title">API макрос GOOGLE(Получать значение со столбца M)</div>
+                </div>
+                <div class="macro-file">API макрос GOOGLE(Получать значение со столбца M)</div>
+                <div class="macro-description">
+                    Макрос для извлечения данных из столбца M таблицы. Позволяет автоматически получать значения из указанного столбца.
+                </div>
+                <a href="az/APIGOOGLE6.txt" class="btn">
+                    <i class="fas fa-external-link-alt"></i> Открыть макрос
+                </a>
+            </div>
+            
+            <div class="macro-card">
+                <div class="macro-header">
+                    <div class="macro-icon">
+                        <i class="fas fa-edit"></i>
+                    </div>
+                    <div class="macro-title">API макрос GOOGLE(Для записи данных в таблицу)</div>
+                </div>
+                <div class="macro-file">API макрос GOOGLE(Для записи данных в таблицу)</div>
+                <div class="macro-description">
+                    Макрос для записи данных в Google Таблицу. Позволяет автоматически заполнять ячейки таблицы данными из внешних источников.
+                </div>
+                <a href="az/APIGOOGLE8.txt" class="btn">
+                    <i class="fas fa-external-link-alt"></i> Открыть макрос
+                </a>
+            </div>
+        </div>
+        
+        
+        
+        <footer>© 2026 <a href="https://t.me/SyshchikProduction">Сыщик Продакшен.</a> Приватный софт по личному заказу <a href="https://lolz.live/meshalkin/">Meshalkin Empire</a>  | Все права защищены</footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.btn').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    const macroName = this.closest('.macro-card').querySelector('.macro-title').textContent;
+                    console.log(`Открываем макрос: ${macroName}`);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

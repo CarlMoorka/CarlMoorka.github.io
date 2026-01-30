@@ -1,0 +1,40 @@
+function doGet(e) {
+  try {
+    var row = parseInt(e.parameter.row, 10);
+    if (!row || row < 1) {
+      return out({ status: "ERROR", message: "Invalid row" });
+    }
+
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+
+    // M = 13
+    var value = sheet.getRange(row, 13).getValue();
+    value = value ? value.toString().trim() : "";
+
+    if (!value) {
+      return out({
+        status: "EMPTY",
+        row: row,
+        value: ""
+      });
+    }
+
+    return out({
+      status: "OK",
+      row: row,
+      value: value
+    });
+
+  } catch (err) {
+    return out({
+      status: "ERROR",
+      message: err.toString()
+    });
+  }
+}
+
+function out(obj) {
+  return ContentService
+    .createTextOutput(JSON.stringify(obj))
+    .setMimeType(ContentService.MimeType.JSON);
+}
